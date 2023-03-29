@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./font.css";
+
+* {
+    font-family: 'Itau Display';
+}
+
+.icon {
+    @apply not-italic;
+    font-family: 'Itau Icons 24px v44';
+}
