@@ -25,7 +25,9 @@ export default function Home({ session }) {
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="text-sm font-bold capitalize font-body">{session.user.username}</span>
+            <span className="text-sm font-bold capitalize font-body">
+              {session.user.username}
+            </span>
             <i className="icon before:content-['\e9cc']" />
           </div>
         </div>
@@ -41,8 +43,15 @@ export default function Home({ session }) {
         style={{ marginTop: navHeight }}
       >
         <div className="grid gap-5 px-6 pt-2 bg-primary">
-          <button onClick={() => setBalanceIsVisible(!balanceIsVisible)} className="flex flex-row items-center gap-2 text-white">
-            {balanceIsVisible ? <i className="icon text-2xl before:content-['\ea8c']" /> : <i className="icon text-2xl before:content-['\ea8d']" />}
+          <button
+            onClick={() => setBalanceIsVisible(!balanceIsVisible)}
+            className="flex flex-row items-center gap-2 text-white"
+          >
+            {balanceIsVisible ? (
+              <i className="icon text-2xl before:content-['\ea8c']" />
+            ) : (
+              <i className="icon text-2xl before:content-['\ea8d']" />
+            )}
             <span className="mt-px text-sm font-bold font-body">
               saldo em conta
             </span>
@@ -50,8 +59,16 @@ export default function Home({ session }) {
 
           <div className="flex flex-row items-center gap-2 text-white">
             <span className="text-2xl font-bold h-fit font-display">R$</span>
-            { balanceIsVisible ? <div className="text-2xl font-bold tracking-wide h-fit font-display">{session.user.balance}</div> : <div className="-mt-1 text-3xl">• • • •</div>}
-            { balanceIsVisible && <i className="icon text-2xl before:content-['\e992'] ml-auto" />}
+            {balanceIsVisible ? (
+              <div className="text-2xl font-bold tracking-wide h-fit font-display">
+                {session.user.balance}
+              </div>
+            ) : (
+              <div className="-mt-1 text-3xl">• • • •</div>
+            )}
+            {balanceIsVisible && (
+              <i className="icon text-2xl before:content-['\e992'] ml-auto" />
+            )}
           </div>
 
           <hr className="h-px opacity-50" />
@@ -61,7 +78,13 @@ export default function Home({ session }) {
               limite da conta disponível
             </span>
             <span className="text-sm font-bold font-display">R$</span>
-            { balanceIsVisible ? <div className="text-sm font-bold font-display">{session.user.limit}</div> : <div className="text-sm tracking-wide">• • • •</div>}
+            {balanceIsVisible ? (
+              <div className="text-sm font-bold font-display">
+                {session.user.limit}
+              </div>
+            ) : (
+              <div className="text-sm tracking-wide">• • • •</div>
+            )}
 
             <i className="icon ml-auto text-sm before:content-['\e9cd']" />
           </div>
@@ -69,8 +92,13 @@ export default function Home({ session }) {
 
         <div className="flex gap-[0.15rem] overflow-x-auto pb-4 border-b-2 border-b-black/10">
           <div className="inline-flex flex-col items-center justify-center pt-2 px-2.5 gap-2 flex-[0]">
-            <div className="relative w-11 h-11 rounded-xl bg-[#106daf]">
-              <i className="icon text-neutral-200 leading-none text-2xl text-center absolute before:content-['\e97e'] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2" />
+            <div className="relative w-11 h-11 rounded-xl bg-[#106daf] flex items-center justify-center">
+              <img
+                src="/open_finance.svg"
+                height="auto"
+                width="16px"
+                className="object-contain mt-px"
+              />
             </div>
             <span className="text-xs text-center whitespace-nowrap">
               open finance
@@ -78,8 +106,13 @@ export default function Home({ session }) {
           </div>
 
           <div className="inline-flex flex-col items-center justify-center pt-2 px-2.5 gap-2 flex-[0]">
-            <div className="relative bg-white border w-11 h-11 border-black/5 rounded-xl">
-              <i className="icon text-primary leading-none text-2xl text-center absolute before:content-['\e97e'] left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2" />
+            <div className="relative flex items-center justify-center bg-white border w-11 h-11 border-black/5 rounded-xl">
+              <img
+                src="/pix.svg"
+                height="auto"
+                width="16px"
+                className="object-contain mt-px"
+              />
             </div>
             <span className="text-xs text-center whitespace-nowrap">Pix</span>
           </div>
