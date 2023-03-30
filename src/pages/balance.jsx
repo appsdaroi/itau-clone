@@ -81,7 +81,7 @@ export default function Balance({ session }) {
           <div className="flex flex-col px-6">
             <div className="flex items-center gap-2 bg-white">
               <div
-                className="rounded-full w-7 h-7 !bg-[url('/itau.png')] bg-center bg-primary-500 bg-no-repeat"
+                className="rounded-full w-7 h-7 !bg-[url('/itau.png')] bg-center bg-primary bg-no-repeat"
                 style={{ backgroundSize: "50%" }}
               ></div>
 
