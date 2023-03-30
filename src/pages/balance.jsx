@@ -80,7 +80,7 @@ export default function Balance({ session }) {
         <div className="flex flex-col pb-2" ref={topRef}>
           <div className="flex flex-col px-6">
             <div className="flex items-center gap-2 bg-white">
-              <div className="rounded-full w-7 h-7 bg-primary"></div>
+              <div className="rounded-full w-7 h-7 bg-[url('/itau.png')] bg-center bg-cover"></div>
 
               <div className="grid">
                 <span className="text-xs text-black/50">Itaú Unibanco</span>
