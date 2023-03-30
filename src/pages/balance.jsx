@@ -169,7 +169,7 @@ export default function Balance({ session }) {
                     );
 
                   return (
-                    <div className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow">
+                    <div key={`${extract.type}__${extract.date}`} className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow">
                       <i className="icon text-2xl before:content-['\e9bb'] text-green-700" />
 
                       <div className="grid grid-rows-2">
