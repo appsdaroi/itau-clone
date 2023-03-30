@@ -38,16 +38,20 @@ export default function Balance({ session }) {
 
       const grouped = _.mapValues(_.groupBy(thisUserExtracts.list, "date"));
 
-
       Object.keys(grouped).map((date, i) => {
         grouped[date].totalValue = 0;
 
         grouped[date].map((extract, i) => {
-          if (extract.type === "withdraw") return grouped[date].totalValue = grouped[date].totalValue - parseFloat(extract.value.replace(",", "."));
-          
-          grouped[date].totalValue += parseFloat(extract.value.replace(",", "."));
-        })
-      })
+          if (extract.type === "withdraw")
+            return (grouped[date].totalValue =
+              grouped[date].totalValue -
+              parseFloat(extract.value.replace(",", ".")));
+
+          grouped[date].totalValue += parseFloat(
+            extract.value.replace(",", ".")
+          );
+        });
+      });
 
       setExtracts(grouped);
     };
@@ -126,14 +130,16 @@ export default function Balance({ session }) {
           style={{ height: `calc(100vh - ${topHeight}px)` }}
         >
           {Object.keys(extracts).map((date, i) => (
-            <>
+            <div key={date}>
               <div className="grid grid-rows-2 gap-1 p-3">
                 <span className="font-semibold">
                   {moment(date, "DD/MM/YYYY").format("DD [de] MMMM")}
                 </span>
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
-                  <span className="font-semibold">R$ {extracts[date].totalValue.toString().replace(".", ",")}</span>
+                  <span className="font-semibold">
+                    R$ {extracts[date].totalValue.toString().replace(".", ",")}
+                  </span>
                 </div>
               </div>
 
@@ -141,7 +147,10 @@ export default function Balance({ session }) {
                 {extracts[date].map((extract, i) => {
                   if (extract.type === "withdraw")
                     return (
-                      <div className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow">
+                      <div
+                        key={`${extract.type}__${extract.date}`}
+                        className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
+                      >
                         <i className="icon text-2xl before:content-['\e9bb'] text-primary" />
 
                         <div className="grid grid-rows-2">
@@ -168,7 +177,8 @@ export default function Balance({ session }) {
                           outras transferências
                         </span>
                         <span className="font-semibold text-green-700">
-                          pix transf {extract.target} {moment(date, "DD/MM/YYYY").format("DD/MM")}
+                          pix transf {extract.target}{" "}
+                          {moment(date, "DD/MM/YYYY").format("DD/MM")}
                         </span>
                       </div>
 
@@ -179,7 +189,7 @@ export default function Balance({ session }) {
                   );
                 })}
               </div>
-            </>
+            </div>
           ))}
         </div>
       </div>
