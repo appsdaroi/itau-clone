@@ -80,7 +80,10 @@ export default function Balance({ session }) {
         <div className="flex flex-col pb-2" ref={topRef}>
           <div className="flex flex-col px-6">
             <div className="flex items-center gap-2 bg-white">
-              <div className="rounded-full w-7 h-7 bg-[url('/itau.png')] bg-center bg-cover"></div>
+              <div
+                className="rounded-full w-7 h-7 !bg-[url('/itau.png')] bg-center bg-primary-500 bg-no-repeat"
+                style={{ backgroundSize: "50%" }}
+              ></div>
 
               <div className="grid">
                 <span className="text-xs text-black/50">Itaú Unibanco</span>
@@ -138,7 +141,10 @@ export default function Balance({ session }) {
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
                   <span className="font-semibold">
-                    R$ {extracts[date].totalValue.toString().replace(".", ",")}
+                    R${" "}
+                    {extracts[date].totalValue.toString().replace(".", ",") < 0
+                      ? 0
+                      : extracts[date].totalValue.toString().replace(".", ",")}
                   </span>
                 </div>
               </div>
@@ -169,7 +175,10 @@ export default function Balance({ session }) {
                     );
 
                   return (
-                    <div key={`${extract.type}__${extract.date}`} className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow">
+                    <div
+                      key={`${extract.type}__${extract.date}`}
+                      className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
+                    >
                       <i className="icon text-2xl before:content-['\e9bb'] text-green-700" />
 
                       <div className="grid grid-rows-2">
