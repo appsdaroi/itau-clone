@@ -10,29 +10,6 @@ export default function Home({ session }) {
     setNavHeight(navRef.current.clientHeight);
   }, []);
 
-  const cardNumberList = [
-    "4463058365818681",
-    "4985552575745535",
-    "4394807069166308",
-    "4642942567171615",
-    "4075058716635040",
-    "4220075079146161",
-    "4642989970615985",
-    "4893995637602494",
-    "4222033834413457",
-    "4442182046283374",
-    "4632992994034144",
-    "4111967785042951",
-    "4442143307429064",
-    "4032253756353909",
-    "4394784915075266",
-    "4226288765386181",
-    "4894513877122906",
-    "4134117494639902",
-    "4016927389400696",
-    "4220074135254937",
-  ];
-
   return (
     <div className="flex flex-col overflow-hidden">
       <div
@@ -48,7 +25,7 @@ export default function Home({ session }) {
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="text-sm font-bold font-body">Felipe</span>
+            <span className="text-sm font-bold capitalize font-body">{session.user.username}</span>
             <i className="icon before:content-['\e9cc']" />
           </div>
         </div>
@@ -73,7 +50,7 @@ export default function Home({ session }) {
 
           <div className="flex flex-row items-center gap-2 text-white">
             <span className="text-2xl font-bold h-fit font-display">R$</span>
-            { balanceIsVisible ? <div className="text-2xl font-bold h-fit font-display">0,00</div> : <div className="-mt-1 text-3xl">• • • •</div>}
+            { balanceIsVisible ? <div className="text-2xl font-bold tracking-wide h-fit font-display">{session.user.balance}</div> : <div className="-mt-1 text-3xl">• • • •</div>}
             { balanceIsVisible && <i className="icon text-2xl before:content-['\e992'] ml-auto" />}
           </div>
 
@@ -84,7 +61,7 @@ export default function Home({ session }) {
               limite da conta disponível
             </span>
             <span className="text-sm font-bold font-display">R$</span>
-            { balanceIsVisible ? <div className="text-sm font-bold font-display">0,00</div> : <div className="text-sm tracking-wide">• • • •</div>}
+            { balanceIsVisible ? <div className="text-sm font-bold font-display">{session.user.limit}</div> : <div className="text-sm tracking-wide">• • • •</div>}
 
             <i className="icon ml-auto text-sm before:content-['\e9cd']" />
           </div>
