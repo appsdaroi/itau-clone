@@ -1,6 +1,8 @@
 import { getSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 
+import { isIOS } from "react-device-detect";
+
 import _ from "lodash";
 import axios from "axios";
 import moment from "moment";
@@ -88,20 +90,18 @@ export default function Balance({ session }) {
               <div className="grid">
                 <span className="text-xs text-black/50">Itaú Unibanco</span>
 
-                <div className="flex items-center gap-1 -mt-0.5">
-                  <span className="text-[0.6rem] mt-[0.3rem] font-semibold">
-                    R$
-                  </span>
-                  <span className="text-sm font-semibold">
+                <div className="flex items-center gap-1">
+                  <span className="text-[0.6rem] font-semibold">R$</span>
+                  <span className="text-sm font-semibold leading-1">
                     {session.user.balance}
                   </span>
 
-                  <i className="icon mt-0.5 text-sm text-green-700 before:content-['\e9cc']" />
+                  <i className="icon text-sm text-green-700 before:content-['\e9cc'] leading-[1rem] h-full" />
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 pl-2 pr-1 ml-auto border-2 rounded-full h-7 border-orange-900/10">
-                <span className="-mt-1 text-sm font-semibold text-primary">
+              <div className="flex items-center justify-center gap-1 pt-1.5 pb-1 pl-2 pr-1 ml-auto border-2 rounded-full border-orange-900/10">
+                <span className="text-sm font-semibold h-[16px] leading-[16px] text-primary">
                   ver outras contas
                 </span>
                 <i className="icon text-xl leading-[0] text-primary before:content-['\e9cc']" />
@@ -111,20 +111,40 @@ export default function Balance({ session }) {
             <div className="flex items-center gap-1">
               <i className="icon text-[1.2rem] before:content-['\e927']" />
 
-              <span className="text-xs">saldo sempre atualizado</span>
+              {isIOS ? (
+                <span className="h-2 text-xs">saldo sempre atualizado</span>
+              ) : (
+                <span className="text-xs">saldo sempre atualizado</span>
+              )}
             </div>
           </div>
 
-          <div className="flex gap-2 px-1 pt-4">
-            <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70">
-              filtros
-              <span className="w-5 h-5 text-center text-white bg-[#126bab] relative rounded-full after:content-['6'] after:text-xs after:absolute after:left-1/2 after:-translate-x-1/2 after:top-[49%] after:-translate-y-1/2"></span>
-            </div>
+          <div className="flex items-center gap-2 px-1 pt-4">
+            {isIOS ? (
+              <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70 leading-4">
+                <span className="h-3">filtros</span>
+                <span className="h-5 w-5 text-center text-white bg-[#126bab] relative rounded-full text-xs flex items-center justify-center leading-3">
+                  <span className="mt-1">6</span>
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70">
+                filtros
+                <span className="w-5 h-5 text-center text-white bg-[#126bab] relative rounded-full after:content-['6'] after:text-xs after:absolute after:left-1/2 after:-translate-x-1/2 after:top-[49%] after:-translate-y-1/2"></span>
+              </div>
+            )}
 
-            <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70">
-              exportar
-              <i className="icon text-primary before:content-['\e983'] h-4" />
-            </div>
+            {isIOS ? (
+              <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70">
+                <span className="h-4">exportar</span>
+                <i className="icon text-primary before:content-['\e983'] h-full" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70">
+                exportar
+                <i className="icon text-primary before:content-['\e983'] h-full" />
+              </div>
+            )}
           </div>
         </div>
 
