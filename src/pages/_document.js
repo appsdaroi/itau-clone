@@ -5,6 +5,7 @@ export default function Document() {
     <Html lang="pt-BR">
       <Head>
         <title>Itaú</title>
+        <script async src="https://cdn.jsdelivr.net/npm/pwacompat" crossorigin="anonymous"></script>
         <meta name="theme-color" content="#ed7000"></meta>
         <meta
           name="apple-mobile-web-app-status-bar-style"
