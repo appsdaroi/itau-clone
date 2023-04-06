@@ -10,7 +10,7 @@ export default function Home({ session }) {
   const [navHeight, setNavHeight] = useState(0);
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
 
-  const [balance, setBalance] = useState(toDollars(session.user.balance));
+  const [balance, setBalance] = useState(toDollars(session.user.balance).slice(3));
 
   const updateUserBalance = async () => {
     const config = {
@@ -30,7 +30,7 @@ export default function Home({ session }) {
       (user) => user.id === session.user.id
     );
 
-    setBalance(toDollars(dbUser.balance));
+    setBalance(toDollars(dbUser.balance).slice(3));
   };
 
   useEffect(() => {

@@ -13,12 +13,41 @@ export default function Balance({ session }) {
   const [extracts, setExtracts] = useState([]);
   const [topHeight, setTopHeight] = useState(0);
 
+  const [balance, setBalance] = useState(
+    toDollars(session.user.balance).slice(3)
+  );
+
+  const updateUserBalance = async () => {
+    const config = {
+      headers: {
+        "X-Master-Key":
+          "$2b$10$qo5bE7wh/z3fVPs.xyH6W.jly4sXaI7d3T3LoiqfYl8Rkw0U1JThi",
+      },
+    };
+
+    const db = await axios.get(
+      "https://api.jsonbin.io/v3/b/6424fcdcace6f33a2200454e",
+      config
+    );
+
+    const dbUser = _.find(
+      db.data.record.users,
+      (user) => user.id === session.user.id
+    );
+
+    setBalance(toDollars(dbUser.balance).slice(3));
+  };
+
   const topRef = useRef(null);
 
   moment.locale("pt-br");
 
   useEffect(() => {
     setTopHeight(topRef.current.clientHeight);
+
+    document.addEventListener("visibilitychange", () => {
+      !document.hidden && updateUserBalance();
+    });
 
     const getExtracts = async () => {
       const config = {
@@ -93,7 +122,7 @@ export default function Balance({ session }) {
                 <div className="flex items-center gap-1">
                   <span className="text-[0.6rem] font-semibold">R$</span>
                   <span className="text-sm font-semibold leading-1">
-                    {session.user.balance}
+                    {balance}
                   </span>
 
                   <i className="icon text-sm text-green-700 before:content-['\e9cc'] leading-[1rem] h-full" />
