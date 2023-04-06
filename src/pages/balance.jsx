@@ -1,6 +1,8 @@
 import { getSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 
+import { toDollars } from "@/helpers/format";
+
 import { isIOS } from "react-device-detect";
 
 import _ from "lodash";
@@ -75,12 +77,9 @@ export default function Balance({ session }) {
         grouped[date].map((extract, i) => {
           if (extract.type === "withdraw")
             return (grouped[date].totalValue =
-              grouped[date].totalValue -
-              parseFloat(extract.value.replace(",", ".")));
+              grouped[date].totalValue - extract.value);
 
-          grouped[date].totalValue += parseFloat(
-            extract.value.replace(",", ".")
-          );
+          grouped[date].totalValue += extract.value;
         });
       });
 
@@ -190,10 +189,10 @@ export default function Balance({ session }) {
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
                   <span className="font-semibold">
-                    R${" "}
-                    {extracts[date].totalValue.toString().replace(".", ",") < 0
-                      ? 0
-                      : extracts[date].totalValue.toString().replace(".", ",")}
+                    
+                    {extracts[date].totalValue < 0
+                      ? toDollars(0)
+                      : toDollars(extracts[date].totalValue)}
                   </span>
                 </div>
               </div>
@@ -218,7 +217,7 @@ export default function Balance({ session }) {
                         </div>
 
                         <span className="ml-auto font-semibold">
-                          - R$ {extract.value}
+                          - {toDollars(extract.value)}
                         </span>
                       </div>
                     );
@@ -241,7 +240,7 @@ export default function Balance({ session }) {
                       </div>
 
                       <span className="ml-auto font-semibold text-green-700">
-                        R$ {extract.value}
+                        {toDollars(extract.value)}
                       </span>
                     </div>
                   );
