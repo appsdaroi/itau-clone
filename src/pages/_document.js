@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
@@ -76,6 +76,11 @@ export default function Document() {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
+        <link
+          rel="apple-touch-startup-image"
+          media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+          href="/icon-512x512.png"
+        ></link>
         <link rel="manifest" href="/manifest.json" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
@@ -86,5 +91,5 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  )
+  );
 }
