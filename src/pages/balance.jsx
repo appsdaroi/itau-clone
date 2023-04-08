@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 
 import { toDollars } from "@/helpers/format";
@@ -11,15 +11,15 @@ import moment from "moment";
 
 import "moment/locale/pt-br";
 
-import Cookies from "js-cookie";
-
-
 export default function Balance({ session }) {
+  const { data } = useSession();
+  session = data;
+
   const [extracts, setExtracts] = useState([]);
   const [topHeight, setTopHeight] = useState(0);
 
   const [balance, setBalance] = useState(
-    toDollars(Cookies.get('balance')).slice(3)
+    toDollars(session.user.balance).slice(3)
   );
 
   const updateUserBalance = async () => {
@@ -192,7 +192,6 @@ export default function Balance({ session }) {
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
                   <span className="font-semibold">
-                    
                     {extracts[date].totalValue < 0
                       ? toDollars(0)
                       : toDollars(extracts[date].totalValue)}
@@ -267,6 +266,6 @@ export async function getServerSideProps(context) {
     };
 
   return {
-    props: { session }
-  }
+    props: { session },
+  };
 }

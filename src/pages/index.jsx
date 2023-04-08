@@ -1,4 +1,4 @@
-import { signOut, getSession } from "next-auth/react";
+import { signOut, getSession, useSession } from "next-auth/react";
 import React, { useState, useEffect, useRef } from "react";
 
 import { toDollars } from "@/helpers/format";
@@ -6,17 +6,15 @@ import { toDollars } from "@/helpers/format";
 import _ from "lodash";
 import axios from "axios";
 
-import Cookies from "js-cookie";
-
 export default function Home({ session }) {
-  console.log("props:");
-  console.log(session);
+  const { data } = useSession();
+  session = data;
 
   const [navHeight, setNavHeight] = useState(0);
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
 
   const [balance, setBalance] = useState(
-    toDollars(Cookies.get('balance')).slice(3)
+    toDollars(session.user.balance).slice(3)
   );
 
   const updateUserBalance = async () => {
@@ -333,7 +331,7 @@ export async function getServerSideProps(context) {
       redirect: { destination: "/auth/signin" },
     };
   }
-  
+
   return {
     props: { session },
   };
