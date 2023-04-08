@@ -11,14 +11,14 @@ const Layout = ({ children, session }) => {
 
       <nav className="fixed bottom-0 left-0 right-0 grid h-[4.5rem] grid-cols-5 gap-3 px-2 pt-2 pb-3 bg-white border-t">
         {router.pathname == "/" ? (
-          <Link shallow href="/" className="flex justify-center items-top">
+          <Link prefetch={false} href="/" className="flex justify-center items-top">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary">
               <i className="icon text-2xl before:content-['\e995'] text-white" />
             </div>
           </Link>
         ) : (
           <Link
-            shallow
+            prefetch={false}
             href="/"
             className="flex flex-col items-center justify-start gap-1.5"
           >
@@ -29,7 +29,7 @@ const Layout = ({ children, session }) => {
 
         {router.pathname == "/balance" ? (
           <Link
-            shallow
+            prefetch={false}
             href="/balance"
             className="flex justify-center items-top"
           >
@@ -39,7 +39,7 @@ const Layout = ({ children, session }) => {
           </Link>
         ) : (
           <Link
-            shallow
+            prefetch={false}
             href="/balance"
             className="flex flex-col items-center justify-start gap-1.5"
           >

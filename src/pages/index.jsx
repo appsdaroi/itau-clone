@@ -8,6 +8,7 @@ import axios from "axios";
 
 export default function Home({ session }) {
   console.log("props:");
+  console.log(session);
 
   const [navHeight, setNavHeight] = useState(0);
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
