@@ -7,10 +7,14 @@ import _ from "lodash";
 import axios from "axios";
 
 export default function Home({ session }) {
+  console.log("props:");
+
   const [navHeight, setNavHeight] = useState(0);
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
 
-  const [balance, setBalance] = useState(toDollars(session.user.balance).slice(3));
+  const [balance, setBalance] = useState(
+    toDollars(session.user.balance).slice(3)
+  );
 
   const updateUserBalance = async () => {
     const config = {
@@ -321,10 +325,14 @@ export async function getServerSideProps(context) {
   const { req } = context;
   const session = await getSession({ req });
 
-  if (!session)
+
+  if (!session) {
     return {
       redirect: { destination: "/auth/signin" },
     };
-
-  return
+  }
+  
+  return {
+    props: { session },
+  };
 }
