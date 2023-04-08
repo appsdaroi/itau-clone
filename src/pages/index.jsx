@@ -326,9 +326,5 @@ export async function getServerSideProps(context) {
       redirect: { destination: "/auth/signin" },
     };
 
-  return {
-    props: {
-      session: session,
-    },
-  };
+  return
 }
