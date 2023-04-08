@@ -11,6 +11,9 @@ import moment from "moment";
 
 import "moment/locale/pt-br";
 
+import Cookies from "js-cookie";
+
+
 export default function Balance({ session }) {
   const [extracts, setExtracts] = useState([]);
   const [topHeight, setTopHeight] = useState(0);

@@ -6,6 +6,8 @@ import { toDollars } from "@/helpers/format";
 import _ from "lodash";
 import axios from "axios";
 
+import Cookies from "js-cookie";
+
 export default function Home({ session }) {
   console.log("props:");
   console.log(session);
