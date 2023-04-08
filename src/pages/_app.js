@@ -4,8 +4,8 @@ import { Layout } from "@/modules/layout/";
 
 export default function App({ Component, pageProps }) {
   return (
-    <SessionProvider session={pageProps.session}>
-      {pageProps.session ? (
+    <SessionProvider session={pageProps.clientData}>
+      {pageProps.clientData ? (
         <Layout>
           <Component {...pageProps} />
         </Layout>

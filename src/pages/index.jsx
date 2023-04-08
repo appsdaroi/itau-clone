@@ -6,8 +6,10 @@ import { toDollars } from "@/helpers/format";
 import _ from "lodash";
 import axios from "axios";
 
-export default function Home({ session }) {
+export default function Home({ clientData }) {
   console.log("props:");
+
+  const session = clientData;
 
   const [navHeight, setNavHeight] = useState(0);
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
@@ -332,7 +334,9 @@ export async function getServerSideProps(context) {
     };
   }
   
+  const clientData = session
+
   return {
-    props: { session },
-  };
+    props: { clientData }
+  }
 }

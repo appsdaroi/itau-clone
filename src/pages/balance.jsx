@@ -11,9 +11,11 @@ import moment from "moment";
 
 import "moment/locale/pt-br";
 
-export default function Balance({ session }) {
+export default function Balance({ clientData }) {
   const [extracts, setExtracts] = useState([]);
   const [topHeight, setTopHeight] = useState(0);
+
+  const session = clientData;
 
   const [balance, setBalance] = useState(
     toDollars(session.user.balance).slice(3)
@@ -263,7 +265,9 @@ export async function getServerSideProps(context) {
       redirect: { destination: "/auth/signin" },
     };
 
+  const clientData = session
+
   return {
-    props: { session }
+    props: { clientData }
   }
 }
