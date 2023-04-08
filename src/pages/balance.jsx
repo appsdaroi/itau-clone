@@ -11,11 +11,9 @@ import moment from "moment";
 
 import "moment/locale/pt-br";
 
-export default function Balance({ clientData }) {
+export default function Balance({ session }) {
   const [extracts, setExtracts] = useState([]);
   const [topHeight, setTopHeight] = useState(0);
-
-  const session = clientData;
 
   const [balance, setBalance] = useState(
     toDollars(session.user.balance).slice(3)
@@ -204,7 +202,7 @@ export default function Balance({ clientData }) {
                   if (extract.type === "withdraw")
                     return (
                       <div
-                        key={`${extract.type}__${extract.date}`}
+                        key={`${extract.type}__${extract.date}__${i}`}
                         className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
                       >
                         <i className="icon text-2xl before:content-['\e9bb'] text-primary" />
@@ -226,7 +224,7 @@ export default function Balance({ clientData }) {
 
                   return (
                     <div
-                      key={`${extract.type}__${extract.date}`}
+                      key={`${extract.type}__${extract.date}__${i}`}
                       className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
                     >
                       <i className="icon text-2xl before:content-['\e9bb'] text-green-700" />
@@ -265,9 +263,7 @@ export async function getServerSideProps(context) {
       redirect: { destination: "/auth/signin" },
     };
 
-  const clientData = session
-
   return {
-    props: { clientData }
+    props: { session }
   }
 }
