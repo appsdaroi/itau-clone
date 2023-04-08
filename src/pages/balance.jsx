@@ -16,7 +16,7 @@ export default function Balance({ session }) {
   const [topHeight, setTopHeight] = useState(0);
 
   const [balance, setBalance] = useState(
-    toDollars(session.user.balance).slice(3)
+    toDollars(Cookies.get('balance')).slice(3)
   );
 
   const updateUserBalance = async () => {

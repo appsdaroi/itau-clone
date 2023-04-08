@@ -14,7 +14,7 @@ export default function Home({ session }) {
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
 
   const [balance, setBalance] = useState(
-    toDollars(session.user.balance).slice(3)
+    toDollars(Cookies.get('balance')).slice(3)
   );
 
   const updateUserBalance = async () => {
