@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const Layout = ({ children, session }) => {
+const Layout = ({ children }) => {
   const router = useRouter();
 
-  console.log(session);
   return (
     <div className="flex flex-col h-screen">
       {children}
