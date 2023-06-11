@@ -1,10 +1,10 @@
 import { signOut, getSession, useSession } from "next-auth/react";
 import React, { useState, useEffect, useRef } from "react";
 
-import { toDollars } from "@/helpers/format";
+import { CentsToReais } from "@/helpers/format";
 
 import _ from "lodash";
-import axios from "axios";
+import { FetchWithToken } from "@/utils/fetch";
 
 export default function Home({ session }) {
   const { data } = useSession();
@@ -14,28 +14,16 @@ export default function Home({ session }) {
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
 
   const [balance, setBalance] = useState(
-    toDollars(session.user.balance).slice(3)
+    CentsToReais(session.session.user.balance)
   );
 
   const updateUserBalance = async () => {
-    const config = {
-      headers: {
-        "X-Master-Key":
-          "$2b$10$qo5bE7wh/z3fVPs.xyH6W.jly4sXaI7d3T3LoiqfYl8Rkw0U1JThi",
-      },
-    };
+    const { data } = await FetchWithToken({
+      path: `itau/${session.session.user.id}`,
+      method: "GET",
+    });
 
-    const db = await axios.get(
-      "https://api.jsonbin.io/v3/b/6424fcdcace6f33a2200454e",
-      config
-    );
-
-    const dbUser = _.find(
-      db.data.record.users,
-      (user) => user.id === session.user.id
-    );
-
-    setBalance(toDollars(dbUser.balance).slice(3));
+    setBalance(CentsToReais(data.response.balance));
   };
 
   useEffect(() => {
@@ -101,7 +89,7 @@ export default function Home({ session }) {
             <span className="text-2xl font-bold h-fit font-display">R$</span>
             {balanceIsVisible ? (
               <div className="text-2xl font-bold tracking-wide h-fit font-display">
-                {balance}
+                {balance.slice(3)}
               </div>
             ) : (
               <div className="-mt-1 text-3xl">• • • •</div>
@@ -120,7 +108,7 @@ export default function Home({ session }) {
             <span className="text-sm font-bold font-display">R$</span>
             {balanceIsVisible ? (
               <div className="text-sm font-bold font-display">
-                {session.user.limit}
+                12.578,00
               </div>
             ) : (
               <div className="text-sm tracking-wide">• • • •</div>

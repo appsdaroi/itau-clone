@@ -12,3 +12,11 @@
     @apply not-italic;
     font-family: 'Itau Icons 24px v44';
 }
+
+.extract-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-break: anywhere;
+}

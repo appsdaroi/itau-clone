@@ -1,12 +1,13 @@
 import { getSession, useSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 
-import { toDollars } from "@/helpers/format";
+import { CentsToReais } from "@/helpers/format";
 
 import { isIOS } from "react-device-detect";
 
 import _ from "lodash";
-import axios from "axios";
+import { FetchWithToken } from "@/utils/fetch";
+
 import moment from "moment";
 
 import "moment/locale/pt-br";
@@ -19,32 +20,49 @@ export default function Balance({ session }) {
   const [topHeight, setTopHeight] = useState(0);
 
   const [balance, setBalance] = useState(
-    toDollars(session.user.balance).slice(3)
+    CentsToReais(session.session.user.balance)
   );
 
   const updateUserBalance = async () => {
-    const config = {
-      headers: {
-        "X-Master-Key":
-          "$2b$10$qo5bE7wh/z3fVPs.xyH6W.jly4sXaI7d3T3LoiqfYl8Rkw0U1JThi",
-      },
-    };
+    const { data } = await FetchWithToken({
+      path: `itau/${session.session.user.id}`,
+      method: "GET",
+    });
 
-    const db = await axios.get(
-      "https://api.jsonbin.io/v3/b/6424fcdcace6f33a2200454e",
-      config
-    );
+    setBalance(CentsToReais(data.response.balance));
+  };
 
-    const dbUser = _.find(
-      db.data.record.users,
-      (user) => user.id === session.user.id
-    );
+  const getExtracts = async () => {
+    const { data } = await FetchWithToken({
+      path: `itau/${session.session.user.id}/extracts`,
+      method: "GET",
+    });
 
-    setBalance(toDollars(dbUser.balance).slice(3));
+    const formattedDates = data.response.map((extract, i) => {
+      return {
+        ...extract,
+        date: moment(extract.date).format("MM/DD/YYYY"),
+      };
+    });
+
+    const grouped = _.mapValues(_.groupBy(formattedDates, "date"));
+
+    Object.keys(grouped).map((date, i) => {
+      grouped[date].totalValue = 0;
+
+      grouped[date].map((extract, i) => {
+        if (extract.type === "withdraw")
+          return (grouped[date].totalValue =
+            grouped[date].totalValue - extract.value);
+
+        grouped[date].totalValue += extract.value;
+      });
+    });
+
+    setExtracts(grouped);
   };
 
   const topRef = useRef(null);
-
   moment.locale("pt-br");
 
   useEffect(() => {
@@ -52,42 +70,8 @@ export default function Balance({ session }) {
 
     document.addEventListener("visibilitychange", () => {
       !document.hidden && updateUserBalance();
+      !document.hidden && getExtracts();
     });
-
-    const getExtracts = async () => {
-      const config = {
-        headers: {
-          "X-Master-Key":
-            "$2b$10$qo5bE7wh/z3fVPs.xyH6W.jly4sXaI7d3T3LoiqfYl8Rkw0U1JThi",
-        },
-      };
-
-      const res = await axios.get(
-        "https://api.jsonbin.io/v3/b/6424fc4aace6f33a220044d7",
-        config
-      );
-
-      const thisUserExtracts = _.find(
-        res.data.record.extracts,
-        (user) => user.id === session.user.id
-      );
-
-      const grouped = _.mapValues(_.groupBy(thisUserExtracts.list, "date"));
-
-      Object.keys(grouped).map((date, i) => {
-        grouped[date].totalValue = 0;
-
-        grouped[date].map((extract, i) => {
-          if (extract.type === "withdraw")
-            return (grouped[date].totalValue =
-              grouped[date].totalValue - extract.value);
-
-          grouped[date].totalValue += extract.value;
-        });
-      });
-
-      setExtracts(grouped);
-    };
 
     getExtracts();
   }, []);
@@ -124,7 +108,7 @@ export default function Balance({ session }) {
                 <div className="flex items-center gap-1">
                   <span className="text-[0.6rem] font-semibold">R$</span>
                   <span className="text-sm font-semibold leading-1">
-                    {balance}
+                    {balance.slice(3)}
                   </span>
 
                   <i className="icon text-sm text-green-700 before:content-['\e9cc'] leading-[1rem] h-full" />
@@ -187,14 +171,14 @@ export default function Balance({ session }) {
             <div key={date}>
               <div className="grid grid-rows-2 gap-1 p-3">
                 <span className="font-semibold">
-                  {moment(date, "DD/MM/YYYY").format("DD [de] MMMM")}
+                  {moment(date).format("DD [de] MMMM")}
                 </span>
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
                   <span className="font-semibold">
                     {extracts[date].totalValue < 0
-                      ? toDollars(0)
-                      : toDollars(extracts[date].totalValue)}
+                      ? CentsToReais(0)
+                      : CentsToReais(extracts[date].totalValue)}
                   </span>
                 </div>
               </div>
@@ -219,7 +203,7 @@ export default function Balance({ session }) {
                         </div>
 
                         <span className="ml-auto font-semibold">
-                          - {toDollars(extract.value)}
+                          - {CentsToReais(extract.value)}
                         </span>
                       </div>
                     );
@@ -235,14 +219,14 @@ export default function Balance({ session }) {
                         <span className="text-[0.7rem] text-black/70">
                           outras transferências
                         </span>
-                        <span className="font-semibold text-green-700">
-                          pix transf {extract.target}{" "}
-                          {moment(date, "DD/MM/YYYY").format("DD/MM")}
+                        <span className="font-semibold text-green-700 extract-title">
+                          pix transf {extract.title}{" "}
+                          {moment(date).format("DD/MM")}
                         </span>
                       </div>
 
                       <span className="ml-auto font-semibold text-green-700">
-                        {toDollars(extract.value)}
+                        {CentsToReais(extract.value)}
                       </span>
                     </div>
                   );
