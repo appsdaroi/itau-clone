@@ -198,7 +198,7 @@ export default function Balance({ session }) {
                             outras transferências
                           </span>
                           <span className="font-semibold">
-                            pix transf {extract.target}{" "}
+                            pix transf {extract.title}{" "}
                             {moment(date, 'DD/MM').format("DD/MM")}
                           </span>
                         </div>
