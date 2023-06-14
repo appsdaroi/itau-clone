@@ -41,7 +41,7 @@ export default function Balance({ session }) {
     const formattedDates = data.response.map((extract, i) => {
       return {
         ...extract,
-        date: moment(extract.date).format("MM/DD/YYYY"),
+        date: moment(extract.date).format("DD/MM/YYYY"),
       };
     });
 
@@ -198,7 +198,8 @@ export default function Balance({ session }) {
                             outras transferências
                           </span>
                           <span className="font-semibold">
-                            pix transf {extract.target} 14/03
+                            pix transf {extract.target}{" "}
+                            {moment(date).format("DD/MM")}
                           </span>
                         </div>
 
