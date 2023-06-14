@@ -174,8 +174,9 @@ export default function Balance({ session }) {
           className="flex flex-col overflow-y-scroll bg-[#f9f8f6] p-1 pb-24"
           style={{ height: `calc(100vh - ${topHeight}px)` }}
         >
-          {Object.keys(extracts).map((date, i) => (
+          {_.reverse(Object.keys(extracts)).map((date, i) => (
             <div key={date}>
+              {console.log(date)}
               <div className="grid grid-rows-2 gap-1 p-3">
                 <span className="font-semibold">
                   {moment(date, "DD/MM/YYYY").format("DD [de] MMMM")}
@@ -210,7 +211,7 @@ export default function Balance({ session }) {
                           </span>
                         </div>
 
-                        <span className="ml-auto font-semibold">
+                        <span className="ml-auto font-semibold whitespace-nowrap">
                           - {CentsToReais(extract.value)}
                         </span>
                       </div>
@@ -233,7 +234,7 @@ export default function Balance({ session }) {
                         </span>
                       </div>
 
-                      <span className="ml-auto font-semibold text-green-700">
+                      <span className="ml-auto font-semibold text-green-700 whitespace-nowrap">
                         {CentsToReais(extract.value)}
                       </span>
                     </div>
