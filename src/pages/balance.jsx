@@ -171,7 +171,7 @@ export default function Balance({ session }) {
             <div key={date}>
               <div className="grid grid-rows-2 gap-1 p-3">
                 <span className="font-semibold">
-                  {moment(date).format("DD [de] MMMM")}
+                  {moment(date, 'DD/MM/YYYY').format("DD [de] MMMM")}
                 </span>
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
@@ -199,7 +199,7 @@ export default function Balance({ session }) {
                           </span>
                           <span className="font-semibold">
                             pix transf {extract.target}{" "}
-                            {moment(date).format("DD/MM")}
+                            {moment(date, 'DD/MM').format("DD/MM")}
                           </span>
                         </div>
 
@@ -222,7 +222,7 @@ export default function Balance({ session }) {
                         </span>
                         <span className="font-semibold text-green-700 extract-title">
                           pix transf {extract.title}{" "}
-                          {moment(date).format("DD/MM")}
+                          {moment(date, 'DD/MM').format("DD/MM")}
                         </span>
                       </div>
 
