@@ -47,19 +47,26 @@ export default function Balance({ session }) {
 
     const grouped = _.mapValues(_.groupBy(formattedDates, "date"));
 
-    Object.keys(grouped).map((date, i) => {
-      grouped[date].totalValue = 0;
+    const ordered = Object.keys(grouped)
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = grouped[key];
+        return obj;
+      }, {});
 
-      grouped[date].map((extract, i) => {
+    Object.keys(ordered).map((date, i) => {
+      ordered[date].totalValue = 0;
+
+      ordered[date].map((extract, i) => {
         if (extract.type === "withdraw")
-          return (grouped[date].totalValue =
-            grouped[date].totalValue - extract.value);
+          return (ordered[date].totalValue =
+            ordered[date].totalValue - extract.value);
 
-        grouped[date].totalValue += extract.value;
+        ordered[date].totalValue += extract.value;
       });
     });
 
-    setExtracts(grouped);
+    setExtracts(ordered);
   };
 
   const topRef = useRef(null);
@@ -171,7 +178,7 @@ export default function Balance({ session }) {
             <div key={date}>
               <div className="grid grid-rows-2 gap-1 p-3">
                 <span className="font-semibold">
-                  {moment(date, 'DD/MM/YYYY').format("DD [de] MMMM")}
+                  {moment(date, "DD/MM/YYYY").format("DD [de] MMMM")}
                 </span>
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
@@ -199,7 +206,7 @@ export default function Balance({ session }) {
                           </span>
                           <span className="font-semibold">
                             pix transf {extract.title}{" "}
-                            {moment(date, 'DD/MM').format("DD/MM")}
+                            {moment(date, "DD/MM").format("DD/MM")}
                           </span>
                         </div>
 
@@ -222,7 +229,7 @@ export default function Balance({ session }) {
                         </span>
                         <span className="font-semibold text-green-700 extract-title">
                           pix transf {extract.title}{" "}
-                          {moment(date, 'DD/MM').format("DD/MM")}
+                          {moment(date, "DD/MM").format("DD/MM")}
                         </span>
                       </div>
 
