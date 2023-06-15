@@ -192,7 +192,7 @@ export default function Balance({ session }) {
               </div>
 
               <div className="flex flex-col gap-1">
-                {extracts[date].map((extract, i) => {
+                {_.reverse(extracts[date]).map((extract, i) => {
                   if (extract.type === "withdraw")
                     return (
                       <div
