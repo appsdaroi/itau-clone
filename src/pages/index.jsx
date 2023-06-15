@@ -13,9 +13,7 @@ export default function Home({ session }) {
   const [navHeight, setNavHeight] = useState(0);
   const [balanceIsVisible, setBalanceIsVisible] = useState(false);
 
-  const [balance, setBalance] = useState(
-    CentsToReais(session.session.user.balance)
-  );
+  const [balance, setBalance] = useState("");
 
   const updateUserBalance = async () => {
     const { data } = await FetchWithToken({
@@ -25,6 +23,10 @@ export default function Home({ session }) {
 
     setBalance(CentsToReais(data.response.balance));
   };
+
+  useEffect(() => {
+    balanceIsVisible && updateUserBalance();
+  }, [balanceIsVisible]);
 
   useEffect(() => {
     document.addEventListener("visibilitychange", () => {
@@ -88,9 +90,15 @@ export default function Home({ session }) {
           <div className="flex flex-row items-center gap-2 text-white">
             <span className="text-2xl font-bold h-fit font-display">R$</span>
             {balanceIsVisible ? (
-              <div className="text-2xl font-bold tracking-wide h-fit font-display">
-                {balance.slice(3)}
-              </div>
+              <>
+                {balance != "" ? (
+                  <div className="text-2xl font-bold tracking-wide h-fit font-display">
+                    {balance.slice(3)}
+                  </div>
+                ) : (
+                  <div className="w-32 h-6 rounded bg-white/50 animate-pulse" />
+                )}
+              </>
             ) : (
               <div className="-mt-1 text-3xl">• • • •</div>
             )}
@@ -107,9 +115,7 @@ export default function Home({ session }) {
             </span>
             <span className="text-sm font-bold font-display">R$</span>
             {balanceIsVisible ? (
-              <div className="text-sm font-bold font-display">
-                12.578,00
-              </div>
+              <div className="text-sm font-bold font-display">12.578,00</div>
             ) : (
               <div className="text-sm tracking-wide">• • • •</div>
             )}

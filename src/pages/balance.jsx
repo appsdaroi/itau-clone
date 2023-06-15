@@ -19,9 +19,7 @@ export default function Balance({ session }) {
   const [extracts, setExtracts] = useState([]);
   const [topHeight, setTopHeight] = useState(0);
 
-  const [balance, setBalance] = useState(
-    CentsToReais(session.session.user.balance)
-  );
+  const [balance, setBalance] = useState("");
 
   const updateUserBalance = async () => {
     const { data } = await FetchWithToken({
@@ -80,6 +78,7 @@ export default function Balance({ session }) {
       !document.hidden && getExtracts();
     });
 
+    updateUserBalance();
     getExtracts();
   }, []);
 
