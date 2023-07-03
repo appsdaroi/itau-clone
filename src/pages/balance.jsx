@@ -173,7 +173,7 @@ export default function Balance({ session }) {
           className="flex flex-col overflow-y-scroll bg-[#f9f8f6] p-1 pb-24"
           style={{ height: `calc(100vh - ${topHeight}px)` }}
         >
-          {_.reverse(Object.keys(extracts)).map((date, i) => (
+          {Object.keys(extracts).map((date, i) => (
             <div key={date}>
               {console.log(date)}
               <div className="grid grid-rows-2 gap-1 p-3">
