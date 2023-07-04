@@ -37,9 +37,11 @@ export default function Balance({ session }) {
     });
 
     const formattedDates = data.response.map((extract, i) => {
+      let date = moment(extract.date).format("DD/MM/YYYY");
+
       return {
         ...extract,
-        date: moment(extract.date).format("DD/MM/YYYY"),
+        date: moment(date, "DD/MM/YYYY").unix(),
       };
     });
 
@@ -65,6 +67,7 @@ export default function Balance({ session }) {
     });
 
     setExtracts(ordered);
+    console.log(ordered);
   };
 
   const topRef = useRef(null);
@@ -173,12 +176,12 @@ export default function Balance({ session }) {
           className="flex flex-col overflow-y-scroll bg-[#f9f8f6] p-1 pb-24"
           style={{ height: `calc(100vh - ${topHeight}px)` }}
         >
-          {Object.keys(extracts).map((date, i) => (
+          {_.reverse(Object.keys(extracts)).map((date, i) => (
             <div key={date}>
               {console.log(date)}
               <div className="grid grid-rows-2 gap-1 p-3">
                 <span className="font-semibold">
-                  {moment(date, "DD/MM/YYYY").format("DD [de] MMMM")}
+                  {moment.unix(date).format("DD [de] MMMM")}
                 </span>
                 <div className="flex gap-1 text-sm opacity-80">
                   <span>saldo do dia</span>
@@ -206,7 +209,7 @@ export default function Balance({ session }) {
                           </span>
                           <span className="font-semibold">
                             pix transf {extract.title}{" "}
-                            {moment(date, "DD/MM").format("DD/MM")}
+                            {moment.unix(date).format("DD/MM")}
                           </span>
                         </div>
 
@@ -229,7 +232,7 @@ export default function Balance({ session }) {
                         </span>
                         <span className="font-semibold text-green-700 extract-title">
                           pix transf {extract.title}{" "}
-                          {moment(date, "DD/MM").format("DD/MM")}
+                          {moment.unix(date).format("DD/MM")}
                         </span>
                       </div>
 
