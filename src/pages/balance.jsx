@@ -20,17 +20,36 @@ export default function Balance({ session }) {
   const [topHeight, setTopHeight] = useState(0);
 
   const [balance, setBalance] = useState("");
+  const [fetching, setFetching] = useState({
+    balance: true,
+    extracts: true,
+  });
 
   const updateUserBalance = async () => {
+    setFetching({
+      ...fetching,
+      balance: true,
+    });
+
     const { data } = await FetchWithToken({
       path: `itau/${session.session.user.id}`,
       method: "GET",
     });
 
     setBalance(CentsToReais(data.response.balance));
+
+    setFetching({
+      ...fetching,
+      balance: false,
+    });
   };
 
   const getExtracts = async () => {
+    setFetching({
+      ...fetching,
+      extracts: true,
+    });
+
     const { data } = await FetchWithToken({
       path: `itau/${session.session.user.id}/extracts`,
       method: "GET",
@@ -67,7 +86,10 @@ export default function Balance({ session }) {
     });
 
     setExtracts(ordered);
-    console.log(ordered);
+    setFetching({
+      ...fetching,
+      extracts: false,
+    });
   };
 
   const topRef = useRef(null);
@@ -76,13 +98,26 @@ export default function Balance({ session }) {
   useEffect(() => {
     setTopHeight(topRef.current.clientHeight);
 
-    document.addEventListener("visibilitychange", () => {
-      !document.hidden && updateUserBalance();
-      !document.hidden && getExtracts();
-    });
-
     updateUserBalance();
     getExtracts();
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        setFetching({
+          balance: true,
+          extracts: true,
+        });
+
+        updateUserBalance();
+        getExtracts();
+
+        return;
+      }
+    });
+
+    return () => {
+      document.removeEventListener("visibilitychange", () => {});
+    };
   }, []);
 
   return (
@@ -105,51 +140,69 @@ export default function Balance({ session }) {
       <div className="flex flex-col h-full mt-20 overflow-y-hidden">
         <div className="flex flex-col pb-2" ref={topRef}>
           <div className="flex flex-col px-6">
-            <div className="flex items-center gap-2 bg-white">
-              <div
-                className="rounded-full w-7 h-7 !bg-[url('/itau.svg')] bg-center bg-primary bg-no-repeat"
-                style={{ backgroundSize: "50%" }}
-              ></div>
+            {fetching.balance && fetching.extracts ? (
+              <>
+                <div className="flex items-center gap-2 mb-12 bg-white animate-pulse">
+                  <div className="rounded-full w-7 h-7 bg-stone-100"></div>
 
-              <div className="grid">
-                <span className="text-xs text-black/50">Itaú Unibanco</span>
+                  <div className="grid gap-1">
+                    <div className="w-16 h-2 rounded-full bg-stone-100"></div>
+
+                    <div className="w-16 h-2 rounded-full bg-stone-100"></div>
+                  </div>
+
+                  <div className="w-32 h-4 ml-auto rounded-full bg-stone-100"></div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 bg-white">
+                  <div
+                    className="rounded-full w-7 h-7 !bg-[url('/itau.svg')] bg-center bg-primary bg-no-repeat"
+                    style={{ backgroundSize: "50%" }}
+                  ></div>
+
+                  <div className="grid">
+                    <span className="text-xs text-black/50">Itaú Unibanco</span>
+
+                    <div className="flex items-center gap-1">
+                      <span className="text-[0.6rem] font-semibold">R$</span>
+                      <span className="text-sm font-semibold leading-1">
+                        {balance.slice(3)}
+                      </span>
+
+                      <i className="icon text-sm text-green-700 before:content-['\e9cc'] leading-[1rem] h-full" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-1 pt-1.5 pb-1 pl-2 pr-1 ml-auto border-2 rounded-full border-orange-900/10">
+                    <span className="text-sm font-semibold h-[16px] leading-[16px] text-primary">
+                      ver outras contas
+                    </span>
+                    <i className="icon text-xl leading-[0] text-primary before:content-['\e9cc']" />
+                  </div>
+                </div>
 
                 <div className="flex items-center gap-1">
-                  <span className="text-[0.6rem] font-semibold">R$</span>
-                  <span className="text-sm font-semibold leading-1">
-                    {balance.slice(3)}
-                  </span>
+                  <i className="icon text-[1.2rem] before:content-['\e927']" />
 
-                  <i className="icon text-sm text-green-700 before:content-['\e9cc'] leading-[1rem] h-full" />
+                  {isIOS ? (
+                    <span className="h-2 text-xs">saldo sempre atualizado</span>
+                  ) : (
+                    <span className="text-xs">saldo sempre atualizado</span>
+                  )}
                 </div>
-              </div>
-
-              <div className="flex items-center justify-center gap-1 pt-1.5 pb-1 pl-2 pr-1 ml-auto border-2 rounded-full border-orange-900/10">
-                <span className="text-sm font-semibold h-[16px] leading-[16px] text-primary">
-                  ver outras contas
-                </span>
-                <i className="icon text-xl leading-[0] text-primary before:content-['\e9cc']" />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1">
-              <i className="icon text-[1.2rem] before:content-['\e927']" />
-
-              {isIOS ? (
-                <span className="h-2 text-xs">saldo sempre atualizado</span>
-              ) : (
-                <span className="text-xs">saldo sempre atualizado</span>
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-2 px-1 pt-4">
             {isIOS ? (
               <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70 leading-4">
                 <span className="h-3">filtros</span>
-                <span className="h-5 w-5 text-center text-white bg-[#126bab] relative rounded-full text-xs flex items-center justify-center leading-3">
+                <div className="h-5 w-5 text-center text-white bg-[#126bab] relative rounded-full text-xs flex items-center justify-center leading-3">
                   <span className="mt-1">6</span>
-                </span>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-2 px-3 pt-1.5 pb-2 text-sm font-semibold border-2 rounded text-black/70">
@@ -176,75 +229,114 @@ export default function Balance({ session }) {
           className="flex flex-col overflow-y-scroll bg-[#f9f8f6] p-1 pb-24"
           style={{ height: `calc(100vh - ${topHeight}px)` }}
         >
-          {_.reverse(Object.keys(extracts)).map((date, i) => (
-            <div key={date}>
-              {console.log(date)}
-              <div className="grid grid-rows-2 gap-1 p-3">
-                <span className="font-semibold">
-                  {moment.unix(date).format("DD [de] MMMM")}
-                </span>
-                <div className="flex gap-1 text-sm opacity-80">
-                  <span>saldo do dia</span>
-                  <span className="font-semibold">
-                    {extracts[date].totalValue < 0
-                      ? CentsToReais(0)
-                      : CentsToReais(extracts[date].totalValue)}
-                  </span>
-                </div>
-              </div>
-
+          {fetching.balance && fetching.extracts ? (
+            <>
               <div className="flex flex-col gap-1">
-                {_.reverse(extracts[date]).map((extract, i) => {
-                  if (extract.type === "withdraw")
-                    return (
-                      <div
-                        key={`${extract.type}__${extract.date}__${i}`}
-                        className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
-                      >
-                        <i className="icon text-2xl before:content-['\e9bb'] text-primary" />
+                <div className="flex animate-pulse items-center justify-between w-full gap-3.5 py-2 px-3.5 h-24 bg-white rounded shadow">
+                  <div className="rounded-full w-9 h-9 bg-stone-300"></div>
 
-                        <div className="grid grid-rows-2">
-                          <span className="text-[0.7rem] text-black/70">
-                            outras transferências
-                          </span>
-                          <span className="font-semibold">
-                            pix transf {extract.title}{" "}
-                            {moment.unix(date).format("DD/MM")}
-                          </span>
-                        </div>
+                  <div className="grid grid-rows-2 gap-3">
+                    <div className="w-20 h-2 rounded-full bg-stone-200"></div>
 
-                        <span className="ml-auto font-semibold whitespace-nowrap">
-                          - {CentsToReais(extract.value)}
-                        </span>
-                      </div>
-                    );
+                    <div className="w-32 h-2 rounded-full bg-stone-300"></div>
 
-                  return (
-                    <div
-                      key={`${extract.type}__${extract.date}__${i}`}
-                      className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
-                    >
-                      <i className="icon text-2xl before:content-['\e9bb'] text-green-700" />
+                    <div className="w-32 h-2 rounded-full bg-stone-300"></div>
 
-                      <div className="grid grid-rows-2">
-                        <span className="text-[0.7rem] text-black/70">
-                          outras transferências
-                        </span>
-                        <span className="font-semibold text-green-700 extract-title">
-                          pix transf {extract.title}{" "}
-                          {moment.unix(date).format("DD/MM")}
-                        </span>
-                      </div>
+                    <div className="w-20 h-2 rounded-full bg-stone-200"></div>
+                  </div>
 
-                      <span className="ml-auto font-semibold text-green-700 whitespace-nowrap">
-                        {CentsToReais(extract.value)}
+                  <div className="w-12 h-2 ml-auto rounded-full bg-stone-300"></div>
+                </div>
+
+                {[...Array(10)].map((date, i) => (
+                  <div className="flex animate-pulse items-center justify-between w-full gap-3.5 py-2 px-3.5 h-20 bg-white rounded shadow">
+                    <div className="rounded-full w-9 h-9 bg-stone-300"></div>
+
+                    <div className="grid grid-rows-2 gap-3">
+                      <div className="w-20 h-2 rounded-full bg-stone-200"></div>
+
+                      <div className="w-32 h-2 rounded-full bg-stone-300"></div>
+
+                      <div className="w-20 h-2 rounded-full bg-stone-200"></div>
+                    </div>
+
+                    <div className="w-12 h-2 ml-auto rounded-full bg-stone-300"></div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              {_.reverse(Object.keys(extracts)).map((date, i) => (
+                <div key={date}>
+                  <div className="grid grid-rows-2 gap-1 p-3">
+                    <span className="font-semibold">
+                      {moment.unix(date).format("DD [de] MMMM")}
+                    </span>
+                    <div className="flex gap-1 text-sm opacity-80">
+                      <span>saldo do dia</span>
+                      <span className="font-semibold">
+                        {extracts[date].totalValue < 0
+                          ? CentsToReais(0)
+                          : CentsToReais(extracts[date].totalValue)}
                       </span>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    {_.reverse(extracts[date]).map((extract, i) => {
+                      if (extract.type === "withdraw")
+                        return (
+                          <div
+                            key={`${extract.type}__${extract.date}__${i}`}
+                            className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
+                          >
+                            <i className="icon text-2xl before:content-['\e9bb'] text-primary" />
+
+                            <div className="grid grid-rows-2">
+                              <span className="text-[0.7rem] text-black/70">
+                                outras transferências
+                              </span>
+                              <span className="font-semibold">
+                                pix transf {extract.title}{" "}
+                                {moment.unix(date).format("DD/MM")}
+                              </span>
+                            </div>
+
+                            <span className="ml-auto font-semibold whitespace-nowrap">
+                              - {CentsToReais(extract.value)}
+                            </span>
+                          </div>
+                        );
+
+                      return (
+                        <div
+                          key={`${extract.type}__${extract.date}__${i}`}
+                          className="flex items-end w-full gap-3.5 py-2 px-3.5 h-16 bg-white rounded shadow"
+                        >
+                          <i className="icon text-2xl before:content-['\e9bb'] text-green-700" />
+
+                          <div className="grid grid-rows-2">
+                            <span className="text-[0.7rem] text-black/70">
+                              outras transferências
+                            </span>
+                            <span className="font-semibold text-green-700 extract-title">
+                              pix transf {extract.title}{" "}
+                              {moment.unix(date).format("DD/MM")}
+                            </span>
+                          </div>
+
+                          <span className="ml-auto font-semibold text-green-700 whitespace-nowrap">
+                            {CentsToReais(extract.value)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>
