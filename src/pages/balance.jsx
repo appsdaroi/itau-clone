@@ -248,8 +248,8 @@ export default function Balance({ session }) {
                   <div className="w-12 h-2 ml-auto rounded-full bg-stone-300"></div>
                 </div>
 
-                {[...Array(10)].map((date, i) => (
-                  <div className="flex animate-pulse items-center justify-between w-full gap-3.5 py-2 px-3.5 h-20 bg-white rounded shadow">
+                {[...Array(10)].map((_, i) => (
+                  <div key={i} className="flex animate-pulse items-center justify-between w-full gap-3.5 py-2 px-3.5 h-20 bg-white rounded shadow">
                     <div className="rounded-full w-9 h-9 bg-stone-300"></div>
 
                     <div className="grid grid-rows-2 gap-3">
