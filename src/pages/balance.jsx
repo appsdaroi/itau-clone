@@ -36,7 +36,7 @@ export default function Balance({ session }) {
       method: "GET",
     });
 
-    setBalance(CentsToReais(data.response.balance));
+    setBalance(CentsToReais(data.response.user.balance));
 
     setFetching({
       ...fetching,
