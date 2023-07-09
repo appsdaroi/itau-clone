@@ -21,7 +21,7 @@ export default function Home({ session }) {
       method: "GET",
     });
 
-    setBalance(CentsToReais(data.response.balance));
+    setBalance(CentsToReais(data.response.user.balance));
   };
 
   useEffect(() => {
